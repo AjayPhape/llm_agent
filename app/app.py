@@ -1,27 +1,72 @@
-import os
+import logging
 
-from llama_cpp import Llama
+from fastapi import HTTPException, FastAPI
 
-llm = Llama(
-    model_path=f"{os.path.expanduser('~')}/Downloads/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
-    n_ctx=1024,
-    n_gpu_layers=48,
-    n_threads=10,
-    verbose=False,
+from pydantic import BaseModel
+
+from simple_llm.app.rag_app_pg import rag_source_chain
+from simple_llm.app.rag_graph_pg import llm_app
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
 )
 
-while True:
+logger = logging.getLogger(__name__)
+app = FastAPI()
+
+
+class QueryRequest(BaseModel):
+    prompt: str
+
+
+class QueryResponse(BaseModel):
+    answer: str
+    sources: list
+
+
+@app.post("/query", response_model=QueryResponse)
+async def query_endpoint(request: QueryRequest):
     try:
-        print("=" * 50)
-        query = input("Enter a prompt: ").strip()
-        if not query:
-            print("Please enter a valid prompt.")
-            continue
-        elif query.lower() == "exit":
-            print("Exiting...")
-            break
-        resp = llm(query, max_tokens=512)
-        out = resp.get("choices", [{}])[0]["text"]
-        print(out)
+        # Validate the input
+        if not request.prompt.strip():
+            raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
+
+        # Invoke the RAG chain
+        result = rag_source_chain.invoke(request.prompt)
+
+        # Prepare the response
+        logger.info(f"Result {result}")
+        response = QueryResponse(
+            answer=result.get("answer").strip(),
+            sources=result.get("source", []),
+        )
+        return response
+
     except Exception as e:
-        print(f"Error: {e}. Retrying...")
+        logger.exception(f"Error processing query: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error.")
+
+
+@app.post("/graph_query", response_model=QueryResponse)
+async def graph_query_endpoint(request: QueryRequest):
+    try:
+        # Validate the input
+        if not request.prompt.strip():
+            raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
+
+        # Invoke the RAG chain
+        result = llm_app.invoke({"prompt": request.prompt})
+
+        # Prepare the response
+        logger.info(f"Result {result}")
+        response = QueryResponse(
+            answer=result.get("answer").strip(),
+            sources=result.get("source", []),
+        )
+        return response
+
+    except Exception as e:
+        logger.exception(f"Error processing query: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error.")

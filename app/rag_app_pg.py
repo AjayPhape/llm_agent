@@ -1,14 +1,10 @@
 import logging
-import os
 
-from fastapi import FastAPI, HTTPException
-from langchain_community.llms import LlamaCpp
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableLambda
-from langchain_ollama import OllamaEmbeddings
-from pydantic import BaseModel
 
+from simple_llm.app.config import embedding, llm
 from simple_llm.app.pg_db import DatabaseConnection
 
 logging.basicConfig(
@@ -18,18 +14,6 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
-
-
-def get_embeddings():
-    # from langchain_huggingface.embeddings import HuggingFaceEmbeddings
-    # return HuggingFaceEmbeddings(
-    #     model_name="sentence-transformers/all-MiniLM-L6-v2",
-    #     model_kwargs={"device": "cpu"},
-    # )
-    return OllamaEmbeddings(model="nomic-embed-text")
-
-
-embedding = get_embeddings()
 
 
 def build_inputs(q: str) -> dict:
@@ -56,15 +40,6 @@ def build_inputs(q: str) -> dict:
     return {"qry": q, "ctx": ctx.strip(), "docs": docs}
 
 
-# 4
-llm = LlamaCpp(
-    model_path=f"{os.path.expanduser('~')}/Downloads/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
-    n_ctx=2300,
-    n_gpu_layers=50,
-    n_threads=12,
-    verbose=False,
-)
-
 # 5
 prompt = PromptTemplate(
     input_variables=["ctx", "qry"],
@@ -88,37 +63,3 @@ rag_source_chain = RunnableLambda(build_inputs) | {
     ),
     "source": lambda x: x["docs"],
 }
-
-app = FastAPI()
-
-
-class QueryRequest(BaseModel):
-    prompt: str
-
-
-class QueryResponse(BaseModel):
-    answer: str
-    sources: list
-
-
-@app.post("/query", response_model=QueryResponse)
-async def query_endpoint(request: QueryRequest):
-    try:
-        # Validate the input
-        if not request.prompt.strip():
-            raise HTTPException(status_code=400, detail="Prompt cannot be empty.")
-
-        # Invoke the RAG chain
-        result = rag_source_chain.invoke(request.prompt)
-
-        # Prepare the response
-        logger.info(f"Result {result}")
-        response = QueryResponse(
-            answer=result.get("answer").strip(),
-            sources=result.get("source", []),
-        )
-        return response
-
-    except Exception as e:
-        logger.exception(f"Error processing query: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error.")
