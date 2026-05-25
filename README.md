@@ -1,2 +1,2 @@
-# simple_llm
-llm practice, with RAG, HuggingFace, PGVector, ChromaDB
+# llm_agent
+Agent Development with ADK
