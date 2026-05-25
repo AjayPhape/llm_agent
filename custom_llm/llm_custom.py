@@ -9,4 +9,3 @@ class LiteLlmCustom(LiteLlm):
 
     def model_dump(self, *args, **kwargs) -> Dict[str, Any]:
         return {"model": self.model, "type": "LiteLlm (Web Safe Workaround)"}
-
