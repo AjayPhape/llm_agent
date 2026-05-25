@@ -7,7 +7,6 @@ import pickle
 from hashlib import sha256
 from pathlib import Path
 
-from zstandard import ZstdCompressor, ZstdDecompressor
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.llms import LlamaCpp
 from langchain_core.output_parsers import StrOutputParser
@@ -16,6 +15,7 @@ from langchain_core.runnables import RunnableLambda
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 from psycopg2.extras import execute_values
 from simple_llm.app.pg_db import DatabaseConnection
+from zstandard import ZstdCompressor, ZstdDecompressor
 
 logging.basicConfig(
     level=logging.INFO,
@@ -44,7 +44,7 @@ llm = LlamaCpp(
     n_gpu_layers=48,
     n_threads=12,
     verbose=False,
-    path_session='sessions/knowledge_session.session',
+    path_session="sessions/knowledge_session.session",
 )
 
 

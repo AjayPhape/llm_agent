@@ -3,7 +3,6 @@ import logging
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableLambda
-
 from simple_llm.app.config import embedding, llm
 from simple_llm.app.pg_db import DatabaseConnection
 

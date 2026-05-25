@@ -4,7 +4,6 @@ from pathlib import Path
 
 from langchain.text_splitter import CharacterTextSplitter
 from psycopg2.extras import execute_values
-
 from simple_llm.app.config import embedding
 from simple_llm.app.pg_db import DatabaseConnection
 

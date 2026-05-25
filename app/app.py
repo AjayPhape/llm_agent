@@ -1,9 +1,7 @@
 import logging
 
-from fastapi import HTTPException, FastAPI
-
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
 from simple_llm.app.rag_app_pg import rag_source_chain
 from simple_llm.app.rag_graph_pg import llm_app
 
