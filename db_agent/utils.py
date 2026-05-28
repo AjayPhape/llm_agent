@@ -56,6 +56,8 @@ class PostgresDB:
         """
         with self.get_connection() as conn:
             with conn.cursor(cursor_factory=RealDictCursor) as cursor:
+                logger.info("PostgreSQL: executing query")
+                logger.info(cursor.mogrify(query, params))
                 cursor.execute(query, params)
                 return list(cursor.fetchall())
 

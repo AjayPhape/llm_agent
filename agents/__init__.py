@@ -7,7 +7,7 @@ Exports the root agents used for:
 - datetime and timezone context
 """
 
-from data_viewer_agent import data_viewer_agent
+from data_fetch_agent import data_fetch_agent
 from datetime_context_agent import datetime_context_agent
 from db_agent import db_agent
 from intent_agent import intent_agent
@@ -18,5 +18,5 @@ __all__ = [
     "weather_service_agent",
     "datetime_context_agent",
     "db_agent",
-    "data_viewer_agent",
+    "data_fetch_agent",
 ]
