@@ -2,8 +2,7 @@ import logging
 
 from google.adk import Agent
 
-from config import LLM_MODEL, LLM_URL
-from custom_llm.llm_custom import LiteLlmCustom, agent_model
+from custom_llm.llm_custom import agent_model
 from schemas.intent import IntentSchema
 
 from .prompts import PROMPT

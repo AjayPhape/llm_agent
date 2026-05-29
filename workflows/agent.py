@@ -1,15 +1,16 @@
-from google.adk import Workflow
+from google.adk import Runner, Workflow
 
 from agents import (
-    data_fetch_agent,
     datetime_context_agent,
-    db_agent,
     intent_agent,
     weather_service_agent,
 )
+from config.db import db_session_service
 from schemas.intent import IntentType
 
 from .routers import intent_router
+
+APP_NAME = "datetime_weather_workflow"
 
 root_agent = Workflow(
     name="datetime_weather_workflow",
@@ -28,6 +29,10 @@ root_agent = Workflow(
             },
         ),
     ],
+)
+
+workflow_runner = Runner(
+    agent=root_agent, app_name=APP_NAME, session_service=db_session_service
 )
 
 # root_agent = Workflow(

@@ -1,10 +1,8 @@
 import logging
-from typing import List
 
 from google.adk import Agent
 
-from config import LLM_MODEL, LLM_URL
-from custom_llm.llm_custom import LiteLlmCustom, agent_model
+from custom_llm.llm_custom import agent_model
 
 # from schemas.db import HelperData
 from .prompts import PROMPT

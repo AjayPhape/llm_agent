@@ -1,6 +1,4 @@
 import logging
-from pydoc import Helper
-from typing import Callable, Dict, List
 
 from google.adk.tools.toolbox_toolset import ToolboxToolset
 from tabulate import tabulate
@@ -29,8 +27,8 @@ def get_summarized_data(helper_data: HelperData):
 
     """
 
-    grouped_columns = ','.join(helper_data.groupColumns)
-    sort_columns = ','.join(helper_data.sortColumns)
+    grouped_columns = ",".join(helper_data.groupColumns)
+    sort_columns = ",".join(helper_data.sortColumns)
 
     query = f"""
     SELECT
@@ -53,9 +51,6 @@ def get_summarized_data(helper_data: HelperData):
         return ""
 
 
-toolset = ToolboxToolset(
-    server_url=MCP_TOOLBOX_URL,
-    toolset_name=MCP_TOOLSET
-)
+toolset = ToolboxToolset(server_url=MCP_TOOLBOX_URL, toolset_name=MCP_TOOLSET)
 
 build_tools: list = [toolset]

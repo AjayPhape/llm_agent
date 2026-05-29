@@ -1,4 +1,4 @@
-import psycopg2
+from google.adk.sessions import DatabaseSessionService
 from pydantic.v1 import BaseSettings
 from sqlalchemy import URL
 
@@ -21,3 +21,5 @@ class PostgresConfig(BaseSettings):
 
 
 DB_ENV = PostgresConfig()
+
+db_session_service = DatabaseSessionService(DB_ENV.db_url)

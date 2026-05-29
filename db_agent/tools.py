@@ -1,12 +1,9 @@
 import logging
-from pydoc import Helper
-from typing import Callable, Dict, List
+from typing import Callable, Dict
 
-from tabulate import tabulate
 
 from schemas.db import HelperData
 from .prompts import categorical_columns
-from .utils import PostgresDB
 
 logger = logging.getLogger(__name__)
 

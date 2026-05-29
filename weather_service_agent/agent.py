@@ -2,16 +2,13 @@ import logging
 
 from google.adk import Agent
 
-from config import LLM_MODEL, LLM_URL
-from custom_llm.llm_custom import LiteLlmCustom, agent_model
+from custom_llm.llm_custom import agent_model
 
 from .prompts import PROMPT
 from .tools import build_tools
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
 
 
 root_agent = Agent(

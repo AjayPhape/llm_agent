@@ -2,11 +2,12 @@ import logging
 from typing import Callable, Dict
 
 import requests
+from google.adk.tools import ToolContext, tool_context
 
 logger = logging.getLogger(__name__)
 
 
-def get_weather(lat: str, lon: str) -> Dict:
+def get_weather(lat: str, lon: str, tool_context: ToolContext) -> Dict:
     """
     Retrieve weather data for a geographic location.
 
@@ -18,7 +19,7 @@ def get_weather(lat: str, lon: str) -> Dict:
         A dictionary containing weather information for the specified
         coordinates.
     """
-
+    logger.info(tool_context.state.get("InitialUserQuery"))
     params = {
         "latitude": lat,
         "longitude": lon,
