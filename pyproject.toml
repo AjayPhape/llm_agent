@@ -1,0 +1,13 @@
+[project]
+name = "llm-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "asyncpg>=0.31.0",
+    "fastapi>=0.136.3",
+    "google-adk[extensions]>=2.1.0",
+    "psycopg2>=2.9.12",
+    "tabulate>=0.10.0",
+]
